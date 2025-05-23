@@ -25,7 +25,13 @@ function Book(title, author, noOfPages) {
 }
 
 function addBookToLibrary(title, author, noOfPages) {
-  // take params, create a book then store it in the array  
+
+  // take params, create a book then store it in the array
+  let btn = document.createElement('button');
+  btn.classList.add("btn");
+  btn.innerText = "Add Book";
+  document.body.appendChild(btn);
+   
     myLibrary.push({id: crypto.randomUUID(), title, author, noOfPages});
 }
 
