@@ -27,10 +27,18 @@ function Book(title, author, noOfPages) {
 function addBookToLibrary(title, author, noOfPages) {
 
   // take params, create a book then store it in the array
-  let btn = document.createElement('button');
-  btn.classList.add("btn");
-  btn.innerText = "Add Book";
-  document.body.appendChild(btn);
+  const addBookBtn = document.getElementById('addBookBtn');
+  const dialogue = document.getElementById('add-book');
+  const closeBtn = document.getElementById('close');
+  addBookBtn.addEventListener('click', function(){
+    dialogue.showModal();
+  });
+
+  
+  closeBtn.addEventListener('click', function(){
+    dialogue.close();
+  })
+
    
     myLibrary.push({id: crypto.randomUUID(), title, author, noOfPages});
 }
@@ -42,7 +50,10 @@ function displayBooks(){
   let books = document.getElementById("books");
   books.innerHTML = myLibrary.map((item) => `<div key="${item.id}"><h3>Title: ${item.title}</h3>
                        <h4>Author: ${item.author}</h4>
-                       <p>No Of Pages: ${item.noOfPages}</p></div>`
+                       <p>No Of Pages: ${item.noOfPages}</p>
+                       <button class="remove">Remove</button>
+                       </div>
+                       `
 ).join('');
 
 }

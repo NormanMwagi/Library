@@ -9,3 +9,15 @@ h1{
     gap: 20px; /* Spacing between books */
     padding: 20px;
 }
+.btn{
+    background-color: blue;
+    color: white;
+    margin-left: 18px;
+    border-radius: 15px;
+    padding: 2px;
+}
+.remove{
+    background-color: red;
+    color: white;
+    border-radius: 7px;
+}

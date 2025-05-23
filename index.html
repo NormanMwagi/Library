@@ -7,7 +7,32 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Library</h1>
+    <h1>Book Store</h1>
+    <button type="button" class="btn" id="addBookBtn">Add Book</button>
+    <div>
+        <dialog id="add-book" class="add-book">
+                <div>
+                    <button type="button" id="close">Close</button>
+                </div>
+            <form id="inputForm" class="inputForm">
+                <div>
+                    <label for="title">Title</label>
+                    <input type="text" id="title" class="title-input">
+                </div>
+                <div>
+                    <label for="author">Author</label>
+                    <input type="text" id="author" class="author-input">
+                </div>
+                <div>
+                    <label for="pages">No of Pages</label>
+                    <input type="text" id="pages" class="pages-input">
+                </div>
+                <div>
+                    <button type="submit" id="submit">Submit</button>
+                </div>
+            </form>
+        </dialog>
+    </div>
     <div id="books" class="books">
     </div>
     <script src="script.js"></script>
