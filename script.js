@@ -4,22 +4,26 @@
 // books have unique id (crypto.randomUUID(). )
 
 const myLibrary = [
-    {id: 1, title:"Atomic habits", author:"James Mclear", noOfPages: 300},
-    { id: 2, title: "To Kill a Mockingbird", author: "Harper Lee", noOfPages: 281 },
-  { id: 3, title: "1984", author: "George Orwell", noOfPages: 328 },
-  { id: 4, title: "The Great Gatsby", author: "F. Scott Fitzgerald", noOfPages: 180 },
+    {id: 1, title:"Atomic habits", author:"James Mclear", noOfPages: 300, isRead: true},
+    { id: 2, title: "To Kill a Mockingbird", author: "Harper Lee", noOfPages: 281, isRead: true },
+  { id: 3, title: "1984", author: "George Orwell", noOfPages: 328, isRead: false },
+  { id: 4, title: "The Great Gatsby", author: "F. Scott Fitzgerald", noOfPages: 180, isRead: true },
 ];
 
-function Book(title, author, noOfPages) {
+function Book(title, author, noOfPages, isRead) {
   // the constructor...
   this.id = crypto.randomUUID();
   this.title = title;
   this.author = author;
   this.noOfPages = noOfPages;
+  this.isRead = isRead;
 }
 
-function addBookToLibrary(title, author, noOfPages) {
-  let book = new Book(title, author, noOfPages);
+Book.prototype.changeReadStatus = function(){
+  this.isRead = !this.isRead;
+}
+function addBookToLibrary(title, author, noOfPages, isRead) {
+  let book = new Book(title, author, noOfPages, isRead);
   myLibrary.push(book);
   
 }
@@ -38,7 +42,9 @@ function displayBooks(){
     (item) => `<div key="${item.id}"><h3>Title: ${item.title}</h3>
                        <h4>Author: ${item.author}</h4>
                        <p>No Of Pages: ${item.noOfPages}</p>
+                       <p>I've Read: ${item.isRead}</p>
                        <button class="remove" data-id="${item.id}">Remove</button>
+                       <button class="read" data-id="${item.id}">Change Read Status</button>
                        </div>
                        `
 ).join('');
@@ -47,6 +53,22 @@ document.querySelectorAll(".remove").forEach(button => {
   button.addEventListener("click", function(){
     const bookId = button.getAttribute("data-id");
     removeBook(bookId);
+  });
+});
+
+document.querySelectorAll(".read").forEach(button => {
+  button.addEventListener("click", () => {
+    const bookId = button.getAttribute("data-id");
+    const book = myLibrary.find(book => book.id === bookId);
+    if(book){
+      if(book instanceof Book){
+        book.changeReadStatus();
+      }
+      else{
+        this.isRead = !this.isRead;
+      }
+      displayBooks();
+    }
   });
 });
 
@@ -71,9 +93,9 @@ formInput.addEventListener("submit", function (e) {
   const titleInput = document.getElementById("title").value.trim();
   const authorInput = document.getElementById("author").value.trim();
   const pagesInput = document.getElementById("pages").value.trim();
-
-  if (titleInput && authorInput && pagesInput) {
-    addBookToLibrary(titleInput, authorInput, pagesInput);
+  const isReadInput = document.getElementById("isRead").checked;
+  if (titleInput && authorInput && pagesInput && isReadInput) {
+    addBookToLibrary(titleInput, authorInput, pagesInput, isReadInput);
     displayBooks(); 
     //document.getElementById("inputForm").reset();
     e.target.reset();
