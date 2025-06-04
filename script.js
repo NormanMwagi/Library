@@ -3,13 +3,6 @@
 // function that takes arguments, creates a book from arguments and store book in the array
 // books have unique id (crypto.randomUUID(). )
 
-const myLibrary = [
-    {id: 1, title:"Atomic habits", author:"James Mclear", noOfPages: 300, isRead: true},
-    { id: 2, title: "To Kill a Mockingbird", author: "Harper Lee", noOfPages: 281, isRead: true },
-  { id: 3, title: "1984", author: "George Orwell", noOfPages: 328, isRead: false },
-  { id: 4, title: "The Great Gatsby", author: "F. Scott Fitzgerald", noOfPages: 180, isRead: true },
-];
-
 function Book(title, author, noOfPages, isRead) {
   // the constructor...
   this.id = crypto.randomUUID();
@@ -22,16 +15,43 @@ function Book(title, author, noOfPages, isRead) {
 Book.prototype.changeReadStatus = function(){
   this.isRead = !this.isRead;
 }
+
+
+let myLibrary = [];
+
+const storedLibraryData = localStorage.getItem("library");
+if(storedLibraryData){
+  myLibrary = JSON.parse(storedLibraryData).map(bookData => {
+  const book = new Book(bookData.title, bookData.author, bookData.noOfPages, bookData.isRead);
+  book.id = bookData.id;
+  return book;
+  });
+}
+else {
+  myLibrary = [
+    new Book("Atomic habits", "James Mclear", 300, true),
+    new Book("To Kill a Mockingbird", "Harper Lee", 281, true),
+    new Book("1984", "George Orwell", 328, false),
+    new Book("The Great Gatsby", "F. Scott Fitzgerald", 180, true)
+  ];
+}
+
+displayBooks();
+function saveToLocalStorage(){
+  localStorage.setItem("library", JSON.stringify(myLibrary));
+}
+
 function addBookToLibrary(title, author, noOfPages, isRead) {
   let book = new Book(title, author, noOfPages, isRead);
   myLibrary.push(book);
-  
+    saveToLocalStorage();
 }
 
 function removeBook(id){
   const index = myLibrary.findIndex(book => book.id === id);
   if(index !== -1){
     myLibrary.splice(index,1);
+      saveToLocalStorage();
   }
   displayBooks();
 }
@@ -39,7 +59,7 @@ function removeBook(id){
 function displayBooks(){
   let books = document.getElementById("books");
   books.innerHTML = myLibrary.map(
-    (item) => `<div key="${item.id}"><h3>Title: ${item.title}</h3>
+    (item) => `<div><h3>Title: ${item.title}</h3>
                        <h4>Author: ${item.author}</h4>
                        <p>No Of Pages: ${item.noOfPages}</p>
                        <p>I've Read: ${item.isRead}</p>
@@ -63,9 +83,11 @@ document.querySelectorAll(".read").forEach(button => {
     if(book){
       if(book instanceof Book){
         book.changeReadStatus();
+          saveToLocalStorage();
       }
       else{
         this.isRead = !this.isRead;
+          saveToLocalStorage();
       }
       displayBooks();
     }
@@ -73,9 +95,6 @@ document.querySelectorAll(".read").forEach(button => {
 });
 
 }
-
-
-displayBooks();
 
 
 document.getElementById("addBookBtn").addEventListener("click", function () {
@@ -94,7 +113,7 @@ formInput.addEventListener("submit", function (e) {
   const authorInput = document.getElementById("author").value.trim();
   const pagesInput = document.getElementById("pages").value.trim();
   const isReadInput = document.getElementById("isRead").checked;
-  if (titleInput && authorInput && pagesInput && isReadInput) {
+  if (titleInput && authorInput && pagesInput) {
     addBookToLibrary(titleInput, authorInput, pagesInput, isReadInput);
     displayBooks(); 
     //document.getElementById("inputForm").reset();
@@ -102,7 +121,3 @@ formInput.addEventListener("submit", function (e) {
     document.getElementById("add-book").close(); 
   }
 });
-
-
-
-
