@@ -24,21 +24,37 @@ function addBookToLibrary(title, author, noOfPages) {
   
 }
 
+function removeBook(id){
+  const index = myLibrary.findIndex(book => book.id === id);
+  if(index !== -1){
+    myLibrary.splice(index,1);
+  }
+  displayBooks();
+}
+
 function displayBooks(){
   let books = document.getElementById("books");
-  books.innerHTML = myLibrary.map((item) => `<div key="${item.id}"><h3>Title: ${item.title}</h3>
+  books.innerHTML = myLibrary.map(
+    (item) => `<div key="${item.id}"><h3>Title: ${item.title}</h3>
                        <h4>Author: ${item.author}</h4>
                        <p>No Of Pages: ${item.noOfPages}</p>
-                       <button class="remove">Remove</button>
+                       <button class="remove" data-id="${item.id}">Remove</button>
                        </div>
                        `
 ).join('');
 
+document.querySelectorAll(".remove").forEach(button => {
+  button.addEventListener("click", function(){
+    const bookId = button.getAttribute("data-id");
+    removeBook(bookId);
+  });
+});
+
 }
 
-displayBooks();
 
 displayBooks();
+
 
 document.getElementById("addBookBtn").addEventListener("click", function () {
   document.getElementById("add-book").showModal();
@@ -59,8 +75,12 @@ formInput.addEventListener("submit", function (e) {
   if (titleInput && authorInput && pagesInput) {
     addBookToLibrary(titleInput, authorInput, pagesInput);
     displayBooks(); 
-    document.getElementById("inputForm").reset();
+    //document.getElementById("inputForm").reset();
+    e.target.reset();
     document.getElementById("add-book").close(); 
   }
 });
+
+
+
 
